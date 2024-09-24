@@ -17,9 +17,9 @@ public class CommentController {
     @Autowired
     CommentService commentService;
 
-    @PostMapping("/save/{postId}/{userId}")
-    public ResponseEntity<CommentDto> createComment(@Valid @RequestBody CommentDto commentDto, @PathVariable Long postId, @PathVariable Long userId) {
-        return new ResponseEntity<>(commentService.createComment(commentDto, postId, userId), HttpStatus.CREATED);
+    @PostMapping("/save/{postId}")
+    public ResponseEntity<CommentDto> createComment(@Valid @RequestBody CommentDto commentDto, @PathVariable Long postId) {
+        return new ResponseEntity<>(commentService.createComment(commentDto, postId), HttpStatus.CREATED);
     }
 
     @GetMapping("/getCommentById/{commentId}")
@@ -32,9 +32,9 @@ public class CommentController {
         return new ResponseEntity<>(commentService.getCommentByPostId(postId), HttpStatus.OK);
     }
 
-    @GetMapping("/getCommentByUserId/{userId}")
-    public ResponseEntity<List<CommentDto>> getCommentByUserId(@PathVariable Long userId) {
-        return new ResponseEntity<>(commentService.getCommentByUserId(userId), HttpStatus.OK);
+    @GetMapping("/getCommentByUserId")
+    public ResponseEntity<List<CommentDto>> getCommentByUserId() {
+        return new ResponseEntity<>(commentService.getCommentByUserId(), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{commentId}")

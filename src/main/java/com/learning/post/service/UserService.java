@@ -10,7 +10,7 @@ public interface UserService {
 
     public UserDto updateUser(UserDto userDto, Long userId);
 
-    public UserDto getUserById(Long userId);
+    public UserDto getUserById();
 
     public List<UserDto> getAllUsers();
 

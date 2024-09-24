@@ -8,6 +8,7 @@ import com.learning.post.repository.UserRepo;
 import com.learning.post.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -43,8 +44,9 @@ public class UserServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public UserDto getUserById(Long userId) {
-        return modelMapper.map(userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException("No user", "id", userId)), UserDto.class);
+    public UserDto getUserById() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return modelMapper.map(userRepo.findById(user.getId()).orElseThrow(() -> new ResourceNotFoundException("No user", "id", user.getId())), UserDto.class);
     }
 
     @Override

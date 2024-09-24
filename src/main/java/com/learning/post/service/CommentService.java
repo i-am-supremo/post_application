@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface CommentService {
 
-    public CommentDto createComment(CommentDto commentDto, Long postId, Long userId);
+    public CommentDto createComment(CommentDto commentDto, Long postId);
 
     public CommentDto updateComment(CommentDto commentDto, Long commentId);
 
@@ -14,7 +14,7 @@ public interface CommentService {
 
     public List<CommentDto> getCommentByPostId(Long postId);
 
-    public List<CommentDto> getCommentByUserId(Long userId);
+    public List<CommentDto> getCommentByUserId();
 
     public String deleteComment(Long commentId);
 

@@ -17,10 +17,10 @@ public class PostController {
     @Autowired
     PostService postService;
 
-    @PostMapping("/save/{userId}/{categoryId}")
-    public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto, @PathVariable Long userId, @PathVariable Long categoryId)
+    @PostMapping("/save/{categoryId}")
+    public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto, @PathVariable Long categoryId)
     {
-        return new ResponseEntity<>(postService.createPost(postDto, userId, categoryId), HttpStatus.CREATED);
+        return new ResponseEntity<>(postService.createPost(postDto, categoryId), HttpStatus.CREATED);
     }
 
     @GetMapping("/getByPostId/{postId}")
@@ -29,9 +29,9 @@ public class PostController {
         return new ResponseEntity<>(postService.getPostById(postId),HttpStatus.OK);
     }
 
-    @GetMapping("/getByUserId/{userId}")
-    public ResponseEntity<List<PostDto>> getPostByUserId(@PathVariable Long userId){
-        return new ResponseEntity<>(postService.getPostByUserId(userId),HttpStatus.OK);
+    @GetMapping("/getByUserId")
+    public ResponseEntity<List<PostDto>> getPostByUserId(){
+        return new ResponseEntity<>(postService.getPostByUserId(),HttpStatus.OK);
     }
 
     @GetMapping("/getByCategoryId/{categoryId}")

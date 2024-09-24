@@ -21,11 +21,9 @@ public class PostDto {
     private Long id;
 
     @NotEmpty(message = "Title of post cannot be empty")
-    @Min(value = 3, message = "The title must be of 3 characters")
     private String title;
 
     @NotEmpty(message = "Description of Post cannot be empty")
-    @Min(value = 10, message = "The description must be of 10 characters")
     private String description;
 
     private LocalDate createdOn;

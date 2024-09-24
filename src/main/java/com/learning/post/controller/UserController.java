@@ -8,6 +8,7 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,9 +25,9 @@ public class UserController {
         return new ResponseEntity<>(userService.updateUser(userDto, id), HttpStatus.CREATED);
     }
 
-    @GetMapping("/getUser/{userId}")
-    public ResponseEntity<UserDto> getUserById(@PathVariable Long userId) {
-        return new ResponseEntity<>(userService.getUserById(userId), HttpStatus.OK);
+    @GetMapping("/getUser")
+    public ResponseEntity<UserDto> getUserById() {
+        return new ResponseEntity<>(userService.getUserById(), HttpStatus.OK);
     }
 
     @GetMapping("/getAllUser")
@@ -34,6 +35,7 @@ public class UserController {
         return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{userId}")
     public ResponseEntity<String> deleteUser(@PathVariable Long userId) {
         return new ResponseEntity<>(userService.deleteUser(userId), HttpStatus.OK);

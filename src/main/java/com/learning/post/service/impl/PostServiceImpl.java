@@ -10,6 +10,7 @@ import com.learning.post.repository.UserRepo;
 import com.learning.post.service.PostService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -32,12 +33,13 @@ public class PostServiceImpl implements PostService {
     CategoryRepo categoryRepo;
 
     @Override
-    public PostDto createPost(PostDto postDto, Long userId, Long categoryId) {
+    public PostDto createPost(PostDto postDto, Long categoryId) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Post post = modelMapper.map(postDto, Post.class);
-        User user = userRepo.findById(userId).get();
+        User userToBeSaved = User.builder().id(user.getId()).build();
         Category category = categoryRepo.findById(categoryId).get();
         post.setCategory(category);
-        post.setUser(user);
+        post.setUser(userToBeSaved);
         post.setCreatedOn(LocalDate.now());
         post.setModifiedOn(LocalDate.now());
         return modelMapper.map(postRepo.save(post), PostDto.class);
@@ -58,9 +60,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public List<PostDto> getPostByUserId(Long userId) {
-        User user = User.builder().id(userId).build();
-        List<Post> posts = postRepo.findByUser(user);
+    public List<PostDto> getPostByUserId() {
+
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User userToBeSaved = User.builder().id(user.getId()).build();
+        List<Post> posts = postRepo.findByUser(userToBeSaved);
         List<PostDto> postDtoList = new ArrayList<>();
         for (Post post : posts)
             postDtoList.add(modelMapper.map(post, PostDto.class));

@@ -11,6 +11,7 @@ import com.learning.post.repository.UserRepo;
 import com.learning.post.service.CommentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -33,12 +34,13 @@ public class CommentServiceImpl implements CommentService {
     UserRepo userRepo;
 
     @Override
-    public CommentDto createComment(CommentDto commentDto, Long postId, Long userId) {
+    public CommentDto createComment(CommentDto commentDto, Long postId) {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         Post post = postRepo.findById(postId).orElseThrow(()-> new ResourceNotFoundException("No Post","id",postId));
-        User user = userRepo.findById(userId).orElseThrow(()-> new ResourceNotFoundException("No User","id",postId));
+        User userToBeSaved = userRepo.findById(user.getId()).orElseThrow(()-> new ResourceNotFoundException("No User","id",postId));
         Comment comment = modelMapper.map(commentDto, Comment.class);
         comment.setCommentedPost(post);
-        comment.setUserWhoCommented(user);
+        comment.setUserWhoCommented(userToBeSaved);
         comment.setCreatedOn(LocalDate.now());
         comment.setModifiedOn(LocalDate.now());
         comment.setIsEdited("N");
@@ -76,9 +78,10 @@ public class CommentServiceImpl implements CommentService {
     }
 
     @Override
-    public List<CommentDto> getCommentByUserId(Long userId) {
-        User user = User.builder().id(userId).build();
-        List<Comment> comments = commentRepo.findByUserWhoCommented(user);
+    public List<CommentDto> getCommentByUserId() {
+        User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        User userToBeSaved = User.builder().id(user.getId()).build();
+        List<Comment> comments = commentRepo.findByUserWhoCommented(userToBeSaved);
         List<CommentDto> commentDto = new ArrayList<>();
         for(Comment comment : comments)
             commentDto.add(modelMapper.map(comment, CommentDto.class));

@@ -19,14 +19,14 @@ public class CategoryController {
     @Autowired
     CategoryService categoryService;
 
-    @Operation(summary = "Save the category")
+    @Operation(summary = "Save the category (Admin access only)")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save")
     public ResponseEntity<CategoryDto> createCategory(@Valid @RequestBody CategoryDto categoryDto) {
         return new ResponseEntity<>(categoryService.createCategory(categoryDto), HttpStatus.CREATED);
     }
 
-    @Operation(summary = "Update the category")
+    @Operation(summary = "Update the category (Admin access only)")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/update/{id}")
     public ResponseEntity<CategoryDto> updateCategory(@Valid @RequestBody CategoryDto categoryDto, @PathVariable Long id) {
@@ -45,7 +45,7 @@ public class CategoryController {
         return new ResponseEntity<>(categoryService.getAllCategories(), HttpStatus.OK);
     }
 
-    @Operation(summary = "Delete the category by category id")
+    @Operation(summary = "Delete the category by category id (Admin access only)")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/delete/{categoryId}")
     public ResponseEntity<String> deleteCategory(@PathVariable Long categoryId) {

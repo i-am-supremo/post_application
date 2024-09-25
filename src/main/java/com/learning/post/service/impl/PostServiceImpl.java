@@ -4,6 +4,7 @@ import com.learning.post.dto.PostDto;
 import com.learning.post.entity.Category;
 import com.learning.post.entity.Post;
 import com.learning.post.entity.User;
+import com.learning.post.exception.ResourceNotFoundException;
 import com.learning.post.repository.CategoryRepo;
 import com.learning.post.repository.PostRepo;
 import com.learning.post.repository.UserRepo;
@@ -56,7 +57,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDto getPostById(Long postId) {
-        return modelMapper.map(postRepo.findById(postId).get(), PostDto.class);
+        Post post = postRepo.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post","ID",postId));
+        PostDto postDto = modelMapper.map(post, PostDto.class);
+        postDto.setLikesCount((long) post.getLikes().size());
+        return postDto;
     }
 
     @Override
@@ -66,8 +70,11 @@ public class PostServiceImpl implements PostService {
         User userToBeSaved = User.builder().id(user.getId()).build();
         List<Post> posts = postRepo.findByUser(userToBeSaved);
         List<PostDto> postDtoList = new ArrayList<>();
-        for (Post post : posts)
-            postDtoList.add(modelMapper.map(post, PostDto.class));
+        for (Post post : posts) {
+            PostDto postDto = modelMapper.map(post, PostDto.class);
+            postDto.setLikesCount(Long.valueOf(post.getLikes().size()));
+            postDtoList.add(postDto);
+        }
         return postDtoList;
     }
 

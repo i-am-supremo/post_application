@@ -3,6 +3,7 @@ package com.learning.post.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.learning.post.entity.Category;
 import com.learning.post.entity.Comment;
+import com.learning.post.entity.Like;
 import com.learning.post.entity.User;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
@@ -31,4 +32,6 @@ public class PostDto {
     private LocalDate modifiedOn;
 
     private List<Comment> comments;
+
+    private Long likesCount;
 }

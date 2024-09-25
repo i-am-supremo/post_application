@@ -32,6 +32,9 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "userWhoCommented", cascade = CascadeType.ALL)
     private List<Comment> userComments;
 
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Like> likes;
+
     @Enumerated(EnumType.STRING)
     private Role role;
 

@@ -13,9 +13,10 @@ import java.util.List;
 @Getter
 @Setter
 public class CategoryDto {
+     Long id;
      @NotEmpty(message = "Category name cannot be Empty")
      String categoryName;
      @NotEmpty(message = "Category Description cannot be empty")
      String categoryDescription;
-     List<Post> posts;
+     List<PostDto> postsDto;
 }

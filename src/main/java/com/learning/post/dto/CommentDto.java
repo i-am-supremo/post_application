@@ -13,6 +13,8 @@ import java.time.LocalDate;
 @Setter
 public class CommentDto {
 
+    Long id;
+
     @NotEmpty(message = "Comment can not be empty")
     private String comment;
 

@@ -1,7 +1,9 @@
 package com.learning.post.service.impl;
 
 import com.learning.post.dto.CategoryDto;
+import com.learning.post.dto.PostDto;
 import com.learning.post.entity.Category;
+import com.learning.post.entity.Post;
 import com.learning.post.exception.ResourceNotFoundException;
 import com.learning.post.repository.CategoryRepo;
 import com.learning.post.service.CategoryService;
@@ -43,8 +45,17 @@ public class CategoryServiceImpl implements CategoryService {
     public List<CategoryDto> getAllCategories() {
         List<Category> categories = categoryRepo.findAll();
         List<CategoryDto> categoryDtoList = new ArrayList<>();
-        for (Category category : categories)
-            categoryDtoList.add(modelMapper.map(category, CategoryDto.class));
+        for (Category category : categories) {
+            List<PostDto> postDtoList = new ArrayList<>();
+            for (Post post : category.getPosts()) {
+                PostDto postDto = modelMapper.map(post, PostDto.class);
+                postDto.setLikesCount(Long.valueOf(post.getLikes().size()));
+                postDtoList.add(postDto);
+            }
+            CategoryDto categoryDto = modelMapper.map(category, CategoryDto.class);
+            categoryDto.setPostsDto(postDtoList);
+            categoryDtoList.add(categoryDto);
+        }
         return categoryDtoList;
     }
 

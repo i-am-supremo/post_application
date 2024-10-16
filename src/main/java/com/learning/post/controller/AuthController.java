@@ -4,6 +4,7 @@ import com.learning.post.dto.LoginDto;
 import com.learning.post.dto.SignupDto;
 import com.learning.post.dto.UserDto;
 import com.learning.post.service.impl.AuthService;
+import com.learning.post.service.impl.EmailService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,12 +22,17 @@ public class AuthController {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private EmailService emailService;
+
 
     @Operation(summary = "Signup the user")
     @PostMapping("/signup")
     public ResponseEntity<UserDto> signup( @RequestBody SignupDto signupDto)
     {
-        return new ResponseEntity<>(authService.signup(signupDto), HttpStatus.CREATED);
+        UserDto userDto = authService.signup(signupDto);
+        emailService.sendSignUpEmail(userDto.getEmail(),userDto.getName());
+        return new ResponseEntity<>(userDto, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Login the user")

@@ -11,6 +11,7 @@ import com.learning.post.repository.UserRepo;
 import com.learning.post.service.PostService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -56,6 +57,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Cacheable
     public PostDto getPostById(Long postId) {
         Post post = postRepo.findById(postId).orElseThrow(()-> new ResourceNotFoundException("Post","ID",postId));
         PostDto postDto = modelMapper.map(post, PostDto.class);
@@ -64,6 +66,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Cacheable(cacheNames = "posts", key = "#user.id")
     public List<PostDto> getPostByUserId() {
 
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -89,6 +92,7 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
+    @Cacheable(cacheNames = "allPosts", key = "allPosts")
     public List<PostDto> getAllPosts() {
         List<Post> posts = postRepo.findAll();
         List<PostDto> postDtoList = new ArrayList<>();

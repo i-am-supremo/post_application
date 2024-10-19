@@ -21,7 +21,6 @@ public class EmailService {
         simpleMailMessage.setSubject(subject);
         simpleMailMessage.setText(this.getBody(name));
         javaMailSender.send(simpleMailMessage);
-
     }
 
     private String getBody(String name) {

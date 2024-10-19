@@ -58,6 +58,5 @@ public class UserController {
         response.setHeader("Content-Disposition","attachment; filename = user.csv");
         List<UserDto> userDtos = userService.getAllUsers();
         csvService.writeUsersToCsv(response.getWriter(),userDtos);
-
     }
 }

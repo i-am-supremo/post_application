@@ -28,18 +28,16 @@ public class AuthController {
 
     @Operation(summary = "Signup the user")
     @PostMapping("/signup")
-    public ResponseEntity<UserDto> signup( @RequestBody SignupDto signupDto)
-    {
+    public ResponseEntity<UserDto> signup(@RequestBody SignupDto signupDto) {
         UserDto userDto = authService.signup(signupDto);
-        emailService.sendSignUpEmail(userDto.getEmail(),userDto.getName());
+        emailService.sendSignUpEmail(userDto.getEmail(), userDto.getName());
         return new ResponseEntity<>(userDto, HttpStatus.CREATED);
     }
 
     @Operation(summary = "Login the user")
     @PostMapping("/login")
-    public  ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto)
-    {
+    public ResponseEntity<String> login(@Valid @RequestBody LoginDto loginDto) {
         String token = authService.login(loginDto);
-        return new ResponseEntity<>(token,HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(token, HttpStatus.ACCEPTED);
     }
 }
